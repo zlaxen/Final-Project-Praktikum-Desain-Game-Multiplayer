@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 using UnityStandardAssets.CrossPlatformInput;
 
@@ -13,23 +14,32 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
 
     private Vector3 smoothMove;
 
-    private GameObject sceneCamera;
+    public GameObject sceneCamera;
     public GameObject playerCamera;
 
     float directionX;
     public Rigidbody2D rb;
 
     public SpriteRenderer sr;
-    void start()
-    {
-        rb = GetComponent<Rigidbody2D>();
+    public Text nameText;
 
+    public static bool Left = false;
+    public static bool Right = true;
+    void Start()
+    {
         if (photonView.IsMine)
         {
+            nameText.text = PhotonNetwork.NickName;
+
+            rb = GetComponent<Rigidbody2D>();
             playerCamera = GameObject.Find("Main Camera");
 
             sceneCamera.SetActive(false);
             playerCamera.SetActive(true);
+        }
+        else
+        {
+            nameText.text = pv.Owner.NickName;
         }
     }
 
@@ -55,13 +65,33 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
 
         if (CrossPlatformInputManager.GetButtonDown("Right"))
         {
-            sr.flipX = false;
+            if (Right == false)
+            {
+                transform.Rotate(0f, 180f, 0f);
+                Right = true;
+                Left = false;
+            }
+            if(Right == true)
+            {
+                transform.Rotate(0f, 0f, 0f);
+            }
+            //sr.flipX = false;
             pv.RPC("OnDirectionChange_Right", RpcTarget.Others);
         }
 
         if (CrossPlatformInputManager.GetButtonDown("Left"))
         {
-            sr.flipX = true;
+            if (Left == false)
+            {
+                transform.Rotate(0f, 180f, 0f);
+                Left = true;
+                Right = false;
+            }
+            if(Left == true)
+            {
+                transform.Rotate(0f, 0f, 0f);
+            }
+            //sr.flipX = true;
             pv.RPC("OnDirectionChange_Left", RpcTarget.Others);
         }
 
@@ -77,13 +107,31 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
     [PunRPC]
     void OnDirectionChange_Left()
     {
-        sr.flipX = true;
+        if (Left == false)
+        {
+            transform.Rotate(0f, 180f, 0f);
+            Left = true;
+            Right = false;
+        }
+        if (Left == true)
+        {
+            transform.Rotate(0f, 0f, 0f);
+        }
     }
 
     [PunRPC]
     void OnDirectionChange_Right()
     {
-        sr.flipX = false;
+        if (Right == false)
+        {
+            transform.Rotate(0f, 180f, 0f);
+            Right = true;
+            Left = false;
+        }
+        if (Right == true)
+        {
+            transform.Rotate(0f, 0f, 0f);
+        }
     }
 
     private void FixedUpdate()

@@ -36,8 +36,8 @@ public class UIHandler : MonoBehaviourPunCallbacks
         print("Failed To Join Room" + returnCode + "Message" + message);
     }
 
-    private void Update()
-    {
-        Debug.Log(PhotonNetwork.GetPing());
-    }
+    //private void Update()
+    //{
+        //Debug.Log(PhotonNetwork.GetPing());
+    //}
 }
