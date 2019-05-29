@@ -10,16 +10,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 {
 
     // Use this for initialization
-    public Text Name;
+
     public GameObject connectedScreen;
     public GameObject disconnectedScreen;
+    public GameObject PleaseWait;
     //[SerializeField] Slider ss;
 
-    void Start()
-    {
-        Name.text = "Please Connect To Master";    
-    }
-    public void OnClick_ConnectBtn()
+    public void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -32,8 +29,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Name.gameObject.SetActive(false);
         disconnectedScreen.SetActive(true);
+        PleaseWait.SetActive(false);
     }
 
     public override void OnJoinedLobby()
@@ -41,8 +38,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (disconnectedScreen.activeSelf)
         {
             disconnectedScreen.SetActive(false);
+            PleaseWait.SetActive(false);
         }
-        Name.gameObject.SetActive(false);
+        PleaseWait.SetActive(false);
         connectedScreen.SetActive(true);
     }
 }

@@ -21,7 +21,11 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
     public Rigidbody2D rb;
 
     public SpriteRenderer sr;
+
     public Text nameText;
+
+    public GameObject BulletPrefab;
+    public Transform BulletPoint;
 
     public static bool Left = false;
     public static bool Right = true;
@@ -36,10 +40,15 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
 
             sceneCamera.SetActive(false);
             playerCamera.SetActive(true);
+
+            //gameObject.tag = "Char";
+            //BulletPrefab.gameObject.tag = "PBullet";
         }
         else
         {
             nameText.text = pv.Owner.NickName;
+            //gameObject.tag = "Enemy";
+            //BulletPrefab.gameObject.tag = "EBullet";
         }
     }
 
@@ -51,7 +60,7 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
         }
         else
         {
-        smoothMovement();
+            smoothMovement();
         }
     }
 
@@ -65,7 +74,7 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
 
         if (CrossPlatformInputManager.GetButtonDown("Right"))
         {
-            if (Right == false)
+            /*if (Right == false)
             {
                 transform.Rotate(0f, 180f, 0f);
                 Right = true;
@@ -74,14 +83,16 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
             if(Right == true)
             {
                 transform.Rotate(0f, 0f, 0f);
-            }
-            //sr.flipX = false;
+                Right = true;
+                Left = false;
+            }*/
+            sr.flipX = false;
             pv.RPC("OnDirectionChange_Right", RpcTarget.Others);
         }
 
         if (CrossPlatformInputManager.GetButtonDown("Left"))
         {
-            if (Left == false)
+            /*if (Left == false)
             {
                 transform.Rotate(0f, 180f, 0f);
                 Left = true;
@@ -90,8 +101,10 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
             if(Left == true)
             {
                 transform.Rotate(0f, 0f, 0f);
-            }
-            //sr.flipX = true;
+                Left = true;
+                Right = false;
+            }*/
+            sr.flipX = true;
             pv.RPC("OnDirectionChange_Left", RpcTarget.Others);
         }
 
@@ -100,14 +113,28 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
             DoJump();
         }
 
+        if (CrossPlatformInputManager.GetButtonDown("Shoot"))
+        {
+            Shoot();
+        }
+
         //var move = new Vector3(Input.GetAxis("Horizontal"), 0);
         //transform.position += move * moveSpeed * Time.deltaTime;
+    }
+
+    public void Shoot()
+    {
+        GameObject Bullet = PhotonNetwork.Instantiate(BulletPrefab.name, BulletPoint.position, Quaternion.identity);
+        if(sr.flipX == true)
+        {
+            Bullet.GetComponent<PhotonView>().RPC("changeDir", RpcTarget.AllBuffered); 
+        }
     }
 
     [PunRPC]
     void OnDirectionChange_Left()
     {
-        if (Left == false)
+        /*if (Left == false)
         {
             transform.Rotate(0f, 180f, 0f);
             Left = true;
@@ -116,13 +143,16 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
         if (Left == true)
         {
             transform.Rotate(0f, 0f, 0f);
-        }
+            Left = true;
+            Right = false;
+        }*/
+        sr.flipX = true;
     }
 
     [PunRPC]
     void OnDirectionChange_Right()
     {
-        if (Right == false)
+        /*if (Right == false)
         {
             transform.Rotate(0f, 180f, 0f);
             Right = true;
@@ -131,7 +161,10 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
         if (Right == true)
         {
             transform.Rotate(0f, 0f, 0f);
-        }
+            Right = true;
+            Left = false;
+        }*/
+        sr.flipX = false;
     }
 
     private void FixedUpdate()
