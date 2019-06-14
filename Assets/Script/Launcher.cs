@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.UI;
 using Photon.Pun;
 using UnityEngine.UI;
 using Photon.Realtime;
@@ -20,11 +19,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.ConnectUsingSettings();
     }
-
     public override void OnConnectedToMaster()
     {
         Debug.Log("connected to master");
         PhotonNetwork.JoinLobby(TypedLobby.Default);
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public override void OnDisconnected(DisconnectCause cause)

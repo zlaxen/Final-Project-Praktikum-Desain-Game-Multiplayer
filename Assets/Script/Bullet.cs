@@ -9,6 +9,9 @@ public class Bullet : MonoBehaviourPun
     public float destroyTime = 2f;
     public bool shootLeft = false;
 
+    public GameObject CharacterPrefab;
+    public GameObject BulletPrefab;
+
     public PhotonView pv;
 
     // Start is called before the first frame update
@@ -28,6 +31,40 @@ public class Bullet : MonoBehaviourPun
         if(collision.tag == "Wall")
         {
             Destroy(this.gameObject);
+        }
+        if(Myplayer.Mine == true)
+        {
+            if (BulletPrefab.tag == "PBullet")
+            {
+                if (collision.tag == "Enemy")
+                {
+                    Destroy(collision.gameObject);
+                }
+            }
+            else if(BulletPrefab.tag == "EBullet")
+            {
+                if(collision.tag == "Player")
+                {
+                    Destroy(collision.gameObject);
+                }
+            }
+        }
+        else if(Myplayer.Yours == true)
+        {
+            if (BulletPrefab.tag == "EBullet")
+            {
+                if (collision.tag == "Player")
+                {
+                    Destroy(collision.gameObject);
+                }
+            }
+            else if (BulletPrefab.tag == "PBullet")
+            {
+                if (collision.tag == "Enemy")
+                {
+                    Destroy(collision.gameObject);
+                }
+            }
         }
 
         /*if(collision.tag == "Enemy")

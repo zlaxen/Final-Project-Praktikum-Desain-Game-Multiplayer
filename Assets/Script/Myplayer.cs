@@ -26,6 +26,12 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
 
     public GameObject BulletPrefab;
     public Transform BulletPoint;
+    public Transform AnotherBulletPoint;
+
+    public static bool Mine;
+    public static bool Yours;
+    //private GameObject Enemies;
+    //private GameObject Players;
 
     public static bool Left = false;
     public static bool Right = true;
@@ -40,13 +46,22 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
 
             sceneCamera.SetActive(false);
             playerCamera.SetActive(true);
+            gameObject.tag = "Player";
+            BulletPrefab.tag = "PBullet";
 
+            Mine = true;
+            Yours = false;
             //gameObject.tag = "Char";
             //BulletPrefab.gameObject.tag = "PBullet";
         }
         else
         {
             nameText.text = pv.Owner.NickName;
+            gameObject.tag = "Enemy";
+            BulletPrefab.tag = "EBullet";
+
+            Mine = false;
+            Yours = true;
             //gameObject.tag = "Enemy";
             //BulletPrefab.gameObject.tag = "EBullet";
         }
@@ -124,8 +139,19 @@ public class Myplayer : MonoBehaviourPun, IPunObservable
 
     public void Shoot()
     {
-        GameObject Bullet = PhotonNetwork.Instantiate(BulletPrefab.name, BulletPoint.position, Quaternion.identity);
-        if(sr.flipX == true)
+        GameObject Bullet;
+
+        if (sr.flipX == true)
+        {
+            Bullet = PhotonNetwork.Instantiate(BulletPrefab.name, AnotherBulletPoint.position, Quaternion.identity);
+        }
+
+        else
+        {
+            Bullet = PhotonNetwork.Instantiate(BulletPrefab.name, BulletPoint.position, Quaternion.identity);
+        }
+
+        if (sr.flipX == true)
         {
             Bullet.GetComponent<PhotonView>().RPC("changeDir", RpcTarget.AllBuffered); 
         }
